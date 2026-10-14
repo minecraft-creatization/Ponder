@@ -1,0 +1,86 @@
+plugins {
+    id "net.fabricmc.fabric-loom" version "${loom_version}"
+}
+
+version = "${project.mod_version}+mc${project.minecraft_version}"
+group = project.maven_group
+
+base {
+    archivesName = "$project.archives_base_name-$project.minecraft_version"
+}
+
+loom {
+    splitEnvironmentSourceSets()
+    accessWidenerPath = file("src/main/resources/ponder.classtweaker")
+    mods {
+        ponder {
+            sourceSet sourceSets.main
+            sourceSet sourceSets.client
+        }
+    }
+    runs {
+        client {
+            if (project.hasProperty("ponderPlayWorld")) {
+                programArgs "--quickPlaySingleplayer", project.property("ponderPlayWorld").toString()
+            }
+        }
+    }
+}
+
+repositories {
+    exclusiveContent {
+        forRepository {
+            maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' }
+        }
+        filter { includeGroup 'maven.modrinth' }
+    }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    // Flywheel is a real dependency: catnip's rendering layer is built on it, exactly as upstream
+    // Ponder depends on Flywheel. Resolved by glob rather than a hardcoded version string so a
+    // version bump in flywheel-26.3/gradle.properties does not silently break this build; the glob
+    // is asserted to match exactly one file so a stale extra jar fails loudly instead of being picked
+    // at random.
+    def flywheelJar = fileTree("../flywheel-26.3/build/libs") {
+        include "flywheel-*.jar"
+        exclude "*-sources.jar"
+    }
+    if (flywheelJar.files.size() != 1) {
+        throw new GradleException(
+            "Expected exactly one flywheel jar in ../flywheel-26.3/build/libs, found " +
+            "${flywheelJar.files.size()}: ${flywheelJar.files*.name}. Build flywheel-26.3 first " +
+            "(cd ../flywheel-26.3 && ./gradlew build).")
+    }
+    implementation files(flywheelJar.files)
+    // Sodium integration (QuadRenderHelperMixin marks sprites active so Sodium does not cull them)
+    // is compile-only: the mixin is gated on Sodium being present at runtime. This module needs no
+    // Iris and no Fabric API -- measured, not assumed: sodium is the only optional mod it imports.
+    clientCompileOnly "maven.modrinth:sodium:${project.sodium_version}"
+}
+
+processResources {
+    def props = [
+        "version": project.version,
+        "minecraft_version": project.minecraft_version,
+        "loader_version": project.loader_version
+    ]
+    inputs.properties props
+    filesMatching("fabric.mod.json") {
+        expand props
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+    it.options.release = 25
+    it.options.compilerArgs << "-Xmaxerrs" << "10000"
+}
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}

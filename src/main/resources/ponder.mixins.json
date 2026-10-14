@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "package": "com.zurrtum.create.client.ponder.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "minVersion": "0.8",
+  "plugin": "com.zurrtum.create.client.ponder.mixin.PonderMixinPlugin",
+  "client": [
+    "KeyMappingMixin",
+    "QuadParticleFeatureRendererMixin",
+    "RenderTypeFeatureRendererGroupMixin",
+    "TextureAtlasMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

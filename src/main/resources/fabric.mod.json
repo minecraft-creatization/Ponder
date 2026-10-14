@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "ponder",
+  "version": "${version}",
+  "name": "Ponder",
+  "description": "An in-game scene system for explaining and showcasing mod behaviour.",
+  "authors": ["The Create Team"],
+  "contact": {
+    "homepage": "https://github.com/minecraft-creatization/Ponder",
+    "sources": "https://github.com/minecraft-creatization/Ponder"
+  },
+  "license": "MIT",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.zurrtum.create.client.ponder.Ponder"
+    ]
+  },
+  "accessWidener": "ponder.classtweaker",
+  "mixins": [
+    "ponder.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "minecraft": "${minecraft_version}",
+    "flywheel": "*",
+    "java": ">=25"
+  }
+}
