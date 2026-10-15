@@ -6,6 +6,7 @@
   "plugin": "com.zurrtum.create.client.ponder.mixin.PonderMixinPlugin",
   "client": [
     "ClientPackSourceMixin",
+    "EditBoxCharTypedMixin",
     "KeyMappingMixin",
     "QuadParticleFeatureRendererMixin",
     "RenderTypeFeatureRendererGroupMixin",

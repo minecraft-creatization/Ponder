@@ -41,6 +41,23 @@ public class PonderTooltipHandler {
     static boolean subject;
     static boolean deferTick;
 
+    /**
+     * Whether the hovered item is one the hold-to-ponder prompt is being drawn for, i.e. whether the
+     * mouse is over an item that has a ponder scene.
+     * <p>
+     * Reset every client tick in {@link #tick()} and set again by {@link #updateHovered}, so it is only
+     * true while an item tooltip is actually being rendered: the tooltip render is the only place that
+     * knows what the mouse is over, and it runs every frame. Consumed by
+     * {@code EditBoxCharTypedMixin}, which keeps the ponder key out of text fields while this is true -
+     * without it, holding W over an item in the creative inventory's search tab typed a "w" into the
+     * search box instead of opening the scene.
+     */
+    private static boolean hoveringPonderable;
+
+    public static boolean isHoveringPonderable() {
+        return hoveringPonderable;
+    }
+
     static final List<Consumer<ItemStack>> hoveredStackCallbacks = new ArrayList<>();
 
     public static final String HOLD_TO_PONDER = PonderLocalization.UI_PREFIX + "hold_to_ponder";
@@ -48,6 +65,7 @@ public class PonderTooltipHandler {
 
     public static void tick() {
         deferTick = true;
+        hoveringPonderable = false;
     }
 
     public static void deferredTick() {
@@ -140,6 +158,7 @@ public class PonderTooltipHandler {
 
         hoveredStack = stack;
         trackingStack = stack;
+        hoveringPonderable = true;
 
         for (Consumer<ItemStack> hoveredStackCallback : hoveredStackCallbacks) {
             hoveredStackCallback.accept(hoveredStack.copy());
