@@ -6,9 +6,13 @@
   "plugin": "com.zurrtum.create.client.ponder.mixin.PonderMixinPlugin",
   "client": [
     "ClientPackSourceMixin",
+    "ClientPacketListenerMixin",
     "EditBoxCharTypedMixin",
+    "GuiRendererMixin",
+    "ItemStackTooltipMixin",
     "KeyMappingMixin",
     "MinecraftResourceReloadMixin",
+    "MinecraftTickMixin",
     "QuadParticleFeatureRendererMixin",
     "RenderTypeFeatureRendererGroupMixin",
     "RenderTypeMixin",
