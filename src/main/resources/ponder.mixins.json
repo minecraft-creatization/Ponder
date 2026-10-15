@@ -8,8 +8,10 @@
     "ClientPackSourceMixin",
     "EditBoxCharTypedMixin",
     "KeyMappingMixin",
+    "MinecraftResourceReloadMixin",
     "QuadParticleFeatureRendererMixin",
     "RenderTypeFeatureRendererGroupMixin",
+    "RenderTypeMixin",
     "TextureAtlasMixin"
   ],
   "injectors": {
