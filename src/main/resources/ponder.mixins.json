@@ -5,6 +5,7 @@
   "minVersion": "0.8",
   "plugin": "com.zurrtum.create.client.ponder.mixin.PonderMixinPlugin",
   "client": [
+    "ClientPackSourceMixin",
     "KeyMappingMixin",
     "QuadParticleFeatureRendererMixin",
     "RenderTypeFeatureRendererGroupMixin",
